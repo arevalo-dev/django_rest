@@ -44,6 +44,10 @@ class PetOwnersListAPIView(generics.ListAPIView):
 
 #         return Response(serialized_instance.data, status=status.HTTP_201_CREATED)
 
+
+
+
+
 # class PetOwnerRetrieveUpdateDestroyAPIView(APIView):
     
 #     serializer_class = PetOwnerSerializer
@@ -70,10 +74,20 @@ class PetOwnersListAPIView(generics.ListAPIView):
 #         owner.delete()
 
 #         return Response(status=status.HTTP_204_NO_CONTENT)
+class PetOwnerRetrieveAPIView(generics.RetrieveAPIView):
+    queryset = PetOwner.objects.all()
+    serializer_class = PetOwnerSerializer
+
+
+
+
+
+
 
 class PetsListAPIView(generics.ListAPIView):
     queryset = Pet.objects.all()
     serializer_class = PetsListSerializers
+
 
 # class PetsListCreate(APIView):
 #     """
@@ -123,3 +137,7 @@ class PetsListAPIView(generics.ListAPIView):
 #         owner.delete()
 
 #         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class PetsRetrieveAPIView(generics.RetrieveAPIView):
+    queryset = Pet.objects.all()
+    serializer_class = PetSerializer

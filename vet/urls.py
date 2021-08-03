@@ -3,6 +3,8 @@ from .views import (
     # Listas Genericas
     PetOwnersListAPIView,
     PetsListAPIView,
+    PetsRetrieveAPIView,
+    PetOwnerRetrieveAPIView,
     # PetOwnersListCreate, 
     # PetsListCreate, 
     # PetOwnerRetrieveUpdateDestroyAPIView, 
@@ -13,7 +15,9 @@ app_name = 'vet'
 
 urlpatterns = [
     path("owners/", PetOwnersListAPIView.as_view(), name="owners_list-create"),
-    path("pets/", PetsListAPIView.as_view(), name="pets_list-create"),
+    path("pets/", PetsListAPIView.as_view(), name="pets_list"),
+    path("pets/<int:pk>", PetsRetrieveAPIView.as_view(), name="pets_retrieve"),
+    path("owners/<int:pk>", PetOwnerRetrieveAPIView.as_view(), name="owners_retrieve"),
     # path("owners/", PetOwnersListCreate.as_view(), name="owners_list-create"),
     # path("owners/<int:pk>", PetOwnerRetrieveUpdateDestroyAPIView.as_view(), name="owners_retrieve-update-destroy"),
     # path("pets/", PetsListCreate.as_view(), name="pets_list-create"),
