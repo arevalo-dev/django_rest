@@ -1,13 +1,19 @@
 from rest_framework import serializers
 from .models import PetOwner, Pet
 
-class PetOwnersListSerializers(serializers.Serializer):
-    id = serializers.IntegerField()
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
+# class PetOwnersListSerializers(serializers.Serializer):
+#     id = serializers.IntegerField()
+#     first_name = serializers.CharField()
+#     last_name = serializers.CharField()
+
+class PetOwnersListSerializers(serializers.ModelSerializer):
     
+    class Meta:
+        model = PetOwner
+        fields = ('id', 'first_name', 'last_name')
 
 class PetOwnerSerializer(serializers.Serializer):
+    id = serializers.ReadOnlyField()
     first_name = serializers.CharField(max_length=255)
     last_name = serializers.CharField(max_length=255)
     address = serializers.CharField()
@@ -32,14 +38,21 @@ class PetOwnerUpdateSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class PetsListSerializers(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField()
-    type = serializers.CharField()
+# class PetsListSerializers(serializers.Serializer):
+#     id = serializers.IntegerField()
+#     name = serializers.CharField()
+#     type = serializers.CharField()
+class PetsListSerializers(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Pet
+        fields = ('id', 'name', 'type')
+
 
 class PetSerializer(serializers.Serializer):
+    id = serializers.ReadOnlyField()
     name = serializers.CharField()
-    type = serializers.CharField()
+    type = serializers.ChoiceField(choices=Pet.PET_TYPES)
     owner_id = serializers.IntegerField()
 
     def create(self, validated_data):
@@ -55,5 +68,5 @@ class PetUpdateSerializer(serializers.Serializer):
         instance.type = validated_data.get('type', instance.type)
         instance.owner_id = validated_data.get('owner_id', instance.owner_id)
         instance.save()
-        
+
         return instance
