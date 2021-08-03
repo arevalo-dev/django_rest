@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import PetOwnersList, PetsList
+from .views import PetOwnersListCreate, PetsList, PetOwnerDetailAPIView
 
 app_name = 'vet'
 
 urlpatterns = [
-    path('owners/', PetOwnersList.as_view(), name= "owners_list"),
-    path('pets/', PetsList.as_view(), name='pets_list')
+    path("owners/", PetOwnersListCreate.as_view(), name="owners_list"),
+    path("owners/<int:pk>", PetOwnerDetailAPIView.as_view(), name="owners_detail"),
+    path("pets/", PetsList.as_view(), name="pets_list"),
 ]

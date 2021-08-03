@@ -3,16 +3,16 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import serializers
+from django.shortcuts import get_object_or_404
 
 # Models
 from .models import PetOwner, Pet
 
 # Serializers
-from .serializers import PetOwnersListSerializers, PetsListSerializers
+from .serializers import PetOwnersListSerializers, PetsListSerializers, PetOwnerSerializer
 
 
-class PetOwnersList(APIView):
+class PetOwnersListCreate(APIView):
     """
     View to list all pet owners in the system.
     """
@@ -33,9 +33,25 @@ class PetOwnersList(APIView):
 
         return Response(serializer.data)
 
+    def post(self, request):
+        serializer = PetOwnerSerializer(data = request.data)
+        serializer.is_valid(raise_exceptions = True)
+        created_instance = serializer.save()
+
+        print(created_instance.__dict__)
+
+        return Response({})
 
 
+class PetOwnerDetailAPIView(APIView):
+    
+    serializer_class = PetOwnerSerializer
 
+    def get(self, request, pk):
+
+        owner = get_object_or_404(PetOwner, id=pk)
+        serializer = self.serializer_class(owner)
+        return Response(serializer.data)
 
 
 class PetsList(APIView):
@@ -60,3 +76,4 @@ class PetsList(APIView):
         serializer = self.serializer_class(pets_queryset, many=True)
 
         return Response(serializer.data)
+
