@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from .models import PetOwner, Pet
 
 # Serializers
-from .serializers import PetOwnersListSerializers, PetsListSerializers, PetOwnerSerializer, PetOwnerUpdateSerializer
+from .serializers import PetOwnersListSerializers, PetsListSerializers, PetOwnerSerializer, PetSerializer, PetOwnerUpdateSerializer, PetUpdateSerializer
 
 class PetOwnersListCreate(APIView):
     """
@@ -29,10 +29,9 @@ class PetOwnersListCreate(APIView):
         serializer = PetOwnerSerializer(data = request.data)
         serializer.is_valid(raise_exception = True)
         created_instance = serializer.save()
+        serialized_instance = PetOwnerSerializer(created_instance)
 
-        print(created_instance.__dict__)
-
-        return Response({})
+        return Response(serialized_instance.data, status=status.HTTP_201_CREATED)
 
 class PetOwnerRetrieveUpdateDestroyAPIView(APIView):
     
@@ -73,15 +72,39 @@ class PetsListCreate(APIView):
         serializer = self.serializer_class(pets_queryset, many=True)
         return Response(serializer.data)
 
-    # def post(self, request):
-    #     serializer = PetOwnerSerializer(data = request.data)
-    #     serializer.is_valid(raise_exceptions = True)
-    #     created_instance = serializer.save()
+    def post(self, request):
+    
+        serializer = PetSerializer(data = request.data)
+        serializer.is_valid(raise_exception = True)
+        created_instance = serializer.save()
+        serialized_instance = PetSerializer(created_instance)
 
-    #     print(created_instance.__dict__)
-
-    #     return Response({})
+        return Response(serialized_instance.data, status=status.HTTP_201_CREATED)
 
 
 class PetsRetrieveUpdateDestroyAPIView(APIView):
-    pass
+    
+    serializer_class = PetSerializer
+
+    def get(self, request, pk):
+
+        owner = get_object_or_404(Pet, id=pk)
+        serializer = self.serializer_class(owner)
+
+        return Response(serializer.data)
+
+    def patch(self, request, pk):
+        owner = get_object_or_404(Pet, id=pk)
+        serializer = PetUpdateSerializer(instance=owner, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        update_instance = serializer.save()
+        serialized_instance = self.serializer_class(update_instance)
+        
+        return Response(serialized_instance.data)
+
+
+    def delete(self, request, pk):
+        owner = get_object_or_404(Pet, id=pk)
+        owner.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
