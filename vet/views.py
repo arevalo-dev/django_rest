@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -9,8 +10,7 @@ from django.shortcuts import get_object_or_404
 from .models import PetOwner, Pet
 
 # Serializers
-from .serializers import PetOwnersListSerializers, PetsListSerializers, PetOwnerSerializer
-
+from .serializers import PetOwnersListSerializers, PetsListSerializers, PetOwnerSerializer, PetOwnerUpdateSerializer
 
 class PetOwnersListCreate(APIView):
     """
@@ -20,30 +20,21 @@ class PetOwnersListCreate(APIView):
     serializer_class = PetOwnersListSerializers
 
     def get(self, request):
-        # owners = [ 
-        #     {
-        #         "id": owner.id, 
-        #         "first_name": owner.first_name
-        #     } 
-        #         for owner in PetOwner.objects.all()
-        #     ]
-
         owners_queryset = PetOwner.objects.all()
         serializer = self.serializer_class(owners_queryset, many=True)
-
         return Response(serializer.data)
 
     def post(self, request):
+
         serializer = PetOwnerSerializer(data = request.data)
-        serializer.is_valid(raise_exceptions = True)
+        serializer.is_valid(raise_exception = True)
         created_instance = serializer.save()
 
         print(created_instance.__dict__)
 
         return Response({})
 
-
-class PetOwnerDetailAPIView(APIView):
+class PetOwnerRetrieveUpdateDestroyAPIView(APIView):
     
     serializer_class = PetOwnerSerializer
 
@@ -51,10 +42,26 @@ class PetOwnerDetailAPIView(APIView):
 
         owner = get_object_or_404(PetOwner, id=pk)
         serializer = self.serializer_class(owner)
+
         return Response(serializer.data)
 
 
-class PetsList(APIView):
+    def patch(self, request, pk):
+        owner = get_object_or_404(PetOwner, id=pk)
+        serializer = PetOwnerUpdateSerializer(instance=owner, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        update_instance = serializer.save()
+        serialized_instance = self.serializer_class(update_instance)
+        
+        return Response(serialized_instance.data)
+    
+    def delete(self, request, pk):
+        owner = get_object_or_404(PetOwner, id=pk)
+        owner.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class PetsListCreate(APIView):
     """
     View to list all pets in the system.
     """
@@ -62,18 +69,19 @@ class PetsList(APIView):
     serializer_class = PetsListSerializers
 
     def get(self, request):
-        # pets = [ 
-        #     {
-        #         "id": pet.id, 
-        #         "name": pet.name, 
-        #         "type": pet.type, 
-        #         "owner": f"{pet.owner.first_name} {pet.owner.last_name}",
-        #     }
-        #     for pet in Pet.objects.all()
-        #     ]
-
         pets_queryset = Pet.objects.all()
         serializer = self.serializer_class(pets_queryset, many=True)
-
         return Response(serializer.data)
 
+    # def post(self, request):
+    #     serializer = PetOwnerSerializer(data = request.data)
+    #     serializer.is_valid(raise_exceptions = True)
+    #     created_instance = serializer.save()
+
+    #     print(created_instance.__dict__)
+
+    #     return Response({})
+
+
+class PetsRetrieveUpdateDestroyAPIView(APIView):
+    pass
