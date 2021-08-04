@@ -6,7 +6,8 @@ from .views import (
     PetRetrieveUpdateDestroyAPIView,
     PetDateListAPIView,
     PetDateCreateAPIView,
-    PetDateRetrieveUpdateDestroyAPIView
+    PetDateRetrieveUpdateDestroyAPIView,
+    PetDateRetrievePet
 )
 
 app_name = 'vet'
@@ -19,4 +20,5 @@ urlpatterns = [
     path("petdate/", PetDateListAPIView.as_view(), name="petdate_list"),
     path("petdate/create/", PetDateCreateAPIView.as_view(), name="petdate_create"),
     path("petdate/<int:pk>", PetDateRetrieveUpdateDestroyAPIView.as_view(), name = "pets_retrieve_update_destroy"),
+    path("petdate/pet/", PetDateRetrievePet.as_view(), name = "petdate_filter-pet")
 ]

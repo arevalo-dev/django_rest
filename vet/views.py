@@ -14,7 +14,8 @@ from .serializers import (
     PetListModelSerializers,
     PetModelSerializer,
     PetDateModelSerializer,
-    PetDateUpdateModelSerializer
+    PetDateUpdateModelSerializer,
+    PetDatePetModelSerializer
 )
 
 
@@ -85,12 +86,15 @@ class PetDateRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 
 class PetDateRetrievePet(generics.ListAPIView):
     queryset = PetDate.objects.all()
-    serializer_class = PetDateModelSerializer
+    serializer_class = PetDatePetModelSerializer
 
-    def get_queryset(self):
+    # def get_queryset(self):
     
-        pet_filter = self.request.GET.get("pet")
-        filters = {}
-        if pet_filter:
-            filters["pet__exact"] = pet_filter
-        return self.queryset.filter(**filters)
+    #     pet_filter = self.request.GET.get("pet")
+    #     owner_filter = self.request.GET.get("owner")
+    #     filters = {}
+    #     if pet_filter != "" or owner_filter != "":
+    #         filters["pet__exact"] = pet_filter
+    #         filters["owner__exact"] = owner_filter
+
+    #     return self.queryset.filter(**filters)
