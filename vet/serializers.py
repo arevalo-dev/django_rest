@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PetOwner, Pet
+from .models import PetOwner, Pet, PetDate
 
 
 class PetOwnersListModelSerializers(serializers.ModelSerializer):
@@ -25,3 +25,15 @@ class PetModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
         fields = ('id', 'name', 'type', 'owner')
+
+class PetDateModelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PetDate
+        fields = ("id", "datetime", "type", "pet")
+
+class PetDateUpdateModelSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = PetDate
+        fields = ("id", "datetime", "type")

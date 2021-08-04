@@ -5,14 +5,16 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 # Models
-from .models import PetOwner, Pet
+from .models import PetOwner, Pet, PetDate
 
 # Serializers
 from .serializers import (
     PetOwnersListModelSerializers,
     PetOwnerModelSerializer,
     PetListModelSerializers,
-    PetModelSerializer
+    PetModelSerializer,
+    PetDateModelSerializer,
+    PetDateUpdateModelSerializer
 )
 
 
@@ -65,3 +67,30 @@ class PetListCreateAPIView(generics.ListCreateAPIView):
 class PetRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Pet.objects.all()
     serializer_class = PetModelSerializer
+
+
+
+################################################################################
+class PetDateListAPIView(generics.ListAPIView):
+    queryset = PetDate.objects.all()
+    serializer_class = PetDateModelSerializer
+
+class PetDateCreateAPIView(generics.CreateAPIView):
+    queryset = PetDate.objects.all()
+    serializer_class = PetDateModelSerializer
+
+class PetDateRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PetDate.objects.all()
+    serializer_class = PetDateUpdateModelSerializer
+
+class PetDateRetrievePet(generics.ListAPIView):
+    queryset = PetDate.objects.all()
+    serializer_class = PetDateModelSerializer
+
+    def get_queryset(self):
+    
+        pet_filter = self.request.GET.get("pet")
+        filters = {}
+        if pet_filter:
+            filters["pet__exact"] = pet_filter
+        return self.queryset.filter(**filters)
