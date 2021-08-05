@@ -46,4 +46,4 @@ class PetDateUpdateModelSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = PetDate
-        fields = ("id", "datetime", "type")
+        fields = ("datetime", "type")

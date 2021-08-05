@@ -89,13 +89,13 @@ class PetDateRetrievePet(generics.ListAPIView):
     serializer_class = PetDatePetModelSerializer
 
     def get_queryset(self):
-    
-        pet_filter = self.request.GET.get("pet")
-        # owner_filter = self.request.GET.get("owner")
+        pet_id = self.request.GET.get("pet")
+        owner_id = self.request.GET.get("owner")
         filters = {}
-        if pet_filter:
-            filters["pet__exact"] = pet_filter
-        # if owner_filter:
-        #     filters["owner__exact"] = owner_filter
+        if pet_id:
+            filters["pet_id"] = pet_id
+
+        if owner_id:
+            filters["pet__owner_id"] = owner_id
 
         return self.queryset.filter(**filters)
