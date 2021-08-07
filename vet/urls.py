@@ -1,4 +1,6 @@
 from django.urls import path
+
+from rest_framework.authtoken import views as authtoken_views
 from .views import (
     PetOwnersListCreateAPIView,
     PetOwnersRetrieveUpdateDestroyAPIView,
@@ -13,6 +15,7 @@ from .views import (
 app_name = 'vet'
 
 urlpatterns = [
+    path("token-auth/", authtoken_views.obtain_auth_token, name ="token_auth" ),
     path("owners/", PetOwnersListCreateAPIView.as_view(), name="owners_list-create"),
     path("owners/<int:pk>", PetOwnersRetrieveUpdateDestroyAPIView.as_view(), name="owners_list-retrieve-update-destroy"),
     path("pets/", PetListCreateAPIView.as_view(), name="pets_list-create"),

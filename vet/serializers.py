@@ -22,6 +22,7 @@ class PetListModelSerializers(serializers.ModelSerializer):
 
 class PetModelSerializer(serializers.ModelSerializer):
     
+    owner = PetOwnerModelSerializer()
     class Meta:
         model = Pet
         fields = ('id', 'name', 'type', 'owner')
